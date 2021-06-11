@@ -25,5 +25,10 @@ namespace YouTrackSharp.TimeTracking
         /// </summary>
         [JsonProperty("url")]
         public Uri Url { get; set; }
+
+        public override string ToString()
+        {
+           return Name;
+        }
     }
 }

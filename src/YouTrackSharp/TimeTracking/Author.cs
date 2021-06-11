@@ -15,9 +15,14 @@ namespace YouTrackSharp.TimeTracking
         public string Login { get; set; }
 
         /// <summary>
-        /// Uri.
+        /// Full name of the user.
         /// </summary>
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
+        [JsonProperty("fullName")]
+        public string FullName { get; set; }
+
+        public override string ToString()
+        {
+           return FullName;
+        }
     }
 }

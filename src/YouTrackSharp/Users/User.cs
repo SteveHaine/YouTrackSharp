@@ -8,7 +8,7 @@ namespace YouTrackSharp.Users
     public class User
     {
         /// <summary>
-        /// Login of the user.
+        /// Id of the user.
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }

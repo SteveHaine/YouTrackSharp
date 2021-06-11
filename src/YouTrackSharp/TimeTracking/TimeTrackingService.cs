@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using YouTrackSharp.Issues;
 
 namespace YouTrackSharp.TimeTracking
 {
@@ -16,6 +17,7 @@ namespace YouTrackSharp.TimeTracking
     public class TimeTrackingService : ITimeTrackingService
     {
         private readonly Connection _connection;
+
         
         /// <summary>
         /// Creates an instance of the <see cref="TimeTrackingService" /> class.
@@ -35,7 +37,7 @@ namespace YouTrackSharp.TimeTracking
             }
 
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.GetAsync($"rest/admin/project/{projectId}/timetracking/worktype");
+            var response = await client.GetAsync($"api/admin/projects/{projectId}/timeTrackingSettings/workItemTypes?fields={typeof(WorkType).JsonFields()}");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -56,7 +58,7 @@ namespace YouTrackSharp.TimeTracking
             }
 
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.GetAsync($"rest/issue/{issueId}/timetracking/workitem");
+            var response = await client.GetAsync($"{IssueWorkItemUrl(issueId)}?fields={typeof(WorkItem).JsonFields()}");
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -84,7 +86,7 @@ namespace YouTrackSharp.TimeTracking
             stringContent.Headers.ContentType = new MediaTypeHeaderValue(Constants.HttpContentTypes.ApplicationJson);
 
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.PostAsync($"rest/issue/{issueId}/timetracking/workitem", stringContent);
+            var response = await client.PostAsync($"{IssueWorkItemUrl(issueId)}", stringContent);
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -127,7 +129,7 @@ namespace YouTrackSharp.TimeTracking
             stringContent.Headers.ContentType = new MediaTypeHeaderValue(Constants.HttpContentTypes.ApplicationJson);
 
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.PutAsync($"rest/issue/{issueId}/timetracking/workitem/{workItemId}", stringContent);
+            var response = await client.PutAsync($"{IssueWorkItemUrl(issueId)}/{workItemId}", stringContent);
 
             if (response.StatusCode == HttpStatusCode.BadRequest)
             {
@@ -153,7 +155,7 @@ namespace YouTrackSharp.TimeTracking
             }
             
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.DeleteAsync($"rest/issue/{issueId}/timetracking/workitem/{workItemId}");
+            var response = await client.DeleteAsync($"{IssueWorkItemUrl(issueId)}/{workItemId}");
 
             // ReSharper disable once SwitchStatementMissingSomeCases
             switch (response.StatusCode)
@@ -167,5 +169,8 @@ namespace YouTrackSharp.TimeTracking
                     break;
             }
         }
-	}
+
+        private string IssueWorkItemUrl(string issueId) => $"api/issues/{issueId}/timeTracking/workItems";
+
+    }
 }

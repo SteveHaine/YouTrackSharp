@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using YouTrackSharp.Issues;
 using YouTrackSharp.Json;
 
 namespace YouTrackSharp.TimeTracking
@@ -28,7 +29,7 @@ namespace YouTrackSharp.TimeTracking
         public WorkItem(DateTime? date, TimeSpan duration, string description = null, WorkType workType = null, Author author = null)
         {
             Date = date;
-            Duration = duration;
+            DurationValue  = new Duration {Minutes = (int) duration.TotalMinutes};
             Description = description ?? throw new ArgumentNullException(nameof(description));
             WorkType = workType;
             Author = author;
@@ -49,22 +50,26 @@ namespace YouTrackSharp.TimeTracking
         public DateTime? Date { get; set; }
 
         /// <summary>
-        /// Duration of the work item in minutes.
+        /// Duration of the work item as a timespan.
         /// </summary>
-        [JsonConverter(typeof(TimeSpanMinutesConverter))]
-        [JsonProperty("duration")]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration => DurationValue.TimeSpan;
 
+        /// <summary>
+        /// Duration Object.
+        /// </summary>
+        [JsonProperty("duration")]
+        public Duration DurationValue { get; set; }
+      
         /// <summary>
         /// Description of the work item.
         /// </summary>
-        [JsonProperty("description")]
+        [JsonProperty("text")]
         public string Description { get; set; }
 
         /// <summary>
         /// Work type of the work item.
         /// </summary>
-        [JsonProperty("worktype")]
+        [JsonProperty("type")]
         public WorkType WorkType { get; set; }
 
         /// <summary>
@@ -86,5 +91,10 @@ namespace YouTrackSharp.TimeTracking
         [JsonConverter(typeof(UnixDateTimeOffsetConverter))]
         [JsonProperty("updated")]
         public DateTime? Updated { get; set; }
+
+        public override string ToString()
+        {
+           return $"{Author} {DurationValue} {WorkType} {Description}";
+        }
     }
 }
