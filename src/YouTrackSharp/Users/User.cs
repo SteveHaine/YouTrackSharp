@@ -10,6 +10,12 @@ namespace YouTrackSharp.Users
         /// <summary>
         /// Login of the user.
         /// </summary>
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Login of the user.
+        /// </summary>
         [JsonProperty("login")]
         public string Login { get; set; }
         

@@ -66,7 +66,7 @@ namespace YouTrackSharp.Issues
             get
             {
                 var field = GetField("Summary");
-                return field?.Value.ToString();
+                return field?.Value?.ToString();
             }
             set => SetField("Summary", value);
         }
@@ -78,7 +78,7 @@ namespace YouTrackSharp.Issues
             get
             {
                 var field = GetField("Description");
-                return field?.Value.ToString();
+                return field?.Value?.ToString();
             }
             set => SetField("Description", value);
         }
@@ -125,8 +125,7 @@ namespace YouTrackSharp.Issues
         /// <returns><see cref="Field"/> matching the <paramref name="fieldName"/>; null when not found.</returns>
         public Field GetField(string fieldName)
         {
-            _fields.TryGetValue(fieldName, out var field);
-            return field;
+           return _fields.TryGetValue(fieldName, out var field) ? field : null;
         }
 
         /// <summary>

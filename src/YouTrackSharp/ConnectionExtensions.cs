@@ -4,6 +4,7 @@ using YouTrackSharp.Issues;
 using YouTrackSharp.Management;
 using YouTrackSharp.Projects;
 using YouTrackSharp.TimeTracking;
+using YouTrackSharp.Users;
 
 namespace YouTrackSharp
 {
@@ -47,7 +48,17 @@ namespace YouTrackSharp
         /// </summary>
         /// <param name="connection">The <see cref="Connection" /> to create a service with.</param>
         /// <returns><see cref="UserManagementService" /> for managing YouTrack users.</returns>
-        public static IUserManagementService CreateUserManagementService(this Connection connection)
+        public static IUserService CreateUserService(this Connection connection)
+        {
+           return new UserService(connection);
+        }
+
+      /// <summary>
+      /// Creates a <see cref="UserManagementService" />.
+      /// </summary>
+      /// <param name="connection">The <see cref="Connection" /> to create a service with.</param>
+      /// <returns><see cref="UserManagementService" /> for managing YouTrack users.</returns>
+      public static IUserManagementService CreateUserManagementService(this Connection connection)
         {
             return new UserManagementService(connection);
         }

@@ -25,7 +25,7 @@ namespace YouTrackSharp.Users
         public async Task<User> GetCurrentUserInfo()
         {
             var client = await _connection.GetAuthenticatedHttpClient();
-            var response = await client.GetAsync("api/admin/users/me");
+            var response = await client.GetAsync($"api/admin/users/me?fields={typeof(User).JsonFields()}");
             
             response.EnsureSuccessStatusCode();
 
